@@ -1,0 +1,76 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# Development files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Test files
+coverage
+.nyc_output
+__tests__
+__mocks__
+test-results
+playwright-report
+
+# Build files
+dist
+build
+out
+.next
+.nuxt
+.output
+
+# Documentation
+*.md
+!README.md
+docs/
+storybook-static
+
+# Configuration files that aren't needed
+*.config.js
+*.config.ts
+.eslintrc
+.prettierrc
+.stylelintrc
+.gitlab-ci.yml
+.github/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Firebase
+.firebase
+firebase-debug.log
+google-credentials.json

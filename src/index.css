@@ -1,0 +1,407 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Premium High-Contrast Light Mode (Phenomenon Studio Inspired) */
+    --primary: #0B0B0B;
+    --primary-dark: #000000;
+    --primary-light: #262626;
+    --primary-bg: rgba(11, 11, 11, 0.05);
+    
+    /* Branding / Structural Accent Colors */
+    --secondary: #2563eb;       /* Keeping your structural brand blue as secondary */
+    --secondary-dark: #1d4ed8;
+    --secondary-light: #3b82f6;
+    
+    /* Accent Status Colors */
+    --accent: #f59e0b;
+    --accent-dark: #d97706;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    
+    /* Neutral System Colors - Soft Warm Minimalist Base */
+    --text: #525252;
+    --text-primary: #0B0B0B;
+    --text-secondary: #737373;
+    --text-muted: #a3a3a3;
+    --bg: #F4F1EA;              /* Warm off-white background */
+    --bg-secondary: #EFECE4;    /* Slightly deeper card layer tone */
+    --bg-tertiary: #E5E2DA;
+    --border: #E5E2DA;
+    --border-light: #EFECE4;
+    --code-bg: #EFECE4;
+    
+    /* UI Premium Elements */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -1px rgb(0 0 0 / 0.02);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.04), 0 4px 6px -2px rgb(0 0 0 / 0.02);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.06), 0 10px 10px -5px rgb(0 0 0 / 0.03);
+    --shadow-xl: 0 25px 30px -5px rgb(0 0 0 / 0.08);
+    --shadow-2xl: 0 35px 60px -15px rgb(0 0 0 / 0.15);
+    
+    /* Typography Overhaul */
+    --sans: 'Satoshi', 'General Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --heading: 'Satoshi', 'General Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    
+    /* Aggressive Premium Rounded Edges */
+    --radius-sm: 0.375rem;
+    --radius: 0.75rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2.5rem;       /* Extracted from Phenomenon Bento Card shapes */
+    --radius-full: 9999px;
+    
+    /* Smooth Transitions */
+    --transition-fast: 150ms cubic-bezier(0.25, 1, 0.5, 1);
+    --transition: 350ms cubic-bezier(0.25, 1, 0.5, 1);       /* Custom premium ease-out */
+    --transition-slow: 500ms cubic-bezier(0.25, 1, 0.5, 1);
+    
+    /* Layers */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Obsidian Dark Mode Variant */
+      --primary: #F4F1EA;
+      --primary-dark: #ffffff;
+      --primary-light: #E5E2DA;
+      --primary-bg: rgba(244, 241, 234, 0.1);
+      
+      --text: #A3A3A3;
+      --text-primary: #F5F5F5;
+      --text-secondary: #737373;
+      --text-muted: #404040;
+      --bg: #0B0B0B;             /* Pure deep obsidian black */
+      --bg-secondary: #141414;   /* Balanced slate-grey panels */
+      --bg-tertiary: #1C1C1C;
+      --border: #1C1C1C;
+      --border-light: #141414;
+      --code-bg: #141414;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.6);
+      --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.7);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.8);
+    }
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+    color: var(--text);
+    background: var(--bg);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color var(--transition), color var(--transition);
+  }
+
+  @media (max-width: 1280px) { body { font-size: 15px; } }
+  @media (max-width: 768px) { body { font-size: 14px; } }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--heading);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.15;
+    tracking: -0.03em;
+  }
+
+  h1 { font-size: 4.5rem; }
+  h2 { font-size: 3rem; }
+  h3 { font-size: 1.75rem; }
+  h4 { font-size: 1.25rem; }
+
+  @media (max-width: 768px) {
+    h1 { font-size: 2.75rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.35rem; }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+
+  /* Minimalist Fine-line Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+
+  ::selection {
+    background: var(--text-primary);
+    color: var(--bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+@layer components {
+  /* Container UI updates */
+  .container-custom {
+    width: 100%;
+    max-width: 1440px; /* Extended to match wide layouts */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .container-custom {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+  }
+
+  /* Structural Adaptive Card Layer */
+  .card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    transition: all var(--transition);
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--text-muted);
+  }
+
+  /* Premium Buttons Setup */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: var(--radius-full); /* Switched globally to pill layout format */
+    transition: all var(--transition);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+
+  .btn-secondary {
+    background: var(--secondary);
+    color: white;
+  }
+  .btn-secondary:hover {
+    background: var(--secondary-dark);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+  }
+  .btn-outline:hover {
+    border-color: var(--text-primary);
+    background: var(--primary-bg);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+  }
+  .btn-ghost:hover {
+    background: var(--bg-secondary);
+  }
+
+  /* Grids */
+  .grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+  @media (max-width: 1024px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+  }
+  .badge-success { background: rgba(16, 185, 129, 0.08); color: var(--success); }
+  .badge-danger { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
+  .badge-warning { background: rgba(245, 158, 11, 0.08); color: var(--warning); }
+  .badge-info { background: rgba(59, 130, 246, 0.08); color: var(--info); }
+
+  /* Forms UI Styling */
+  input, textarea, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 2px var(--primary-bg);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+/* Bottom nav styling */
+.bottom-nav-safe-area {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+  /* Table Custom Setup */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .data-table th { font-weight: 600; color: var(--text-primary); background: var(--bg-secondary); }
+  .data-table tr:hover { background: var(--bg-secondary); }
+
+  /* Dashboard Framework Retention rules */
+  .dashboard-layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 280px; flex-shrink: 0; background: var(--bg-secondary); border-right: 1px solid var(--border); }
+  .main-content { flex: 1; overflow-y: auto; }
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -280px; transition: left var(--transition); z-index: var(--z-modal); }
+    .sidebar.open { left: 0; }
+  }
+
+  /* Modals configurations */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); z-index: var(--z-modal-backdrop); }
+  .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg); border-radius: var(--radius-lg); padding: 2rem; max-width: 90vw; max-height: 90vh; overflow-y: auto; z-index: var(--z-modal); box-shadow: var(--shadow-xl); }
+
+  /* Status Dots rules */
+  .status-indicator { display: inline-flex; align-items: center; gap: 0.375rem; }
+  .status-dot { width: 0.5rem; height: 0.5rem; border-radius: var(--radius-full); }
+  .status-dot.online { background: var(--success); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15); animation: pulse 2s infinite; }
+  .status-dot.offline { background: var(--danger); }
+  .status-dot.warning { background: var(--warning); }
+}
+
+@layer utilities {
+  /* Phenomenon Smooth Alpha Horizontal Moving Strip Gradient Mask */
+  .mask-gradient {
+    mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
+  }
+
+  /* Multi-line Truncation Rules */
+  .truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .truncate-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Custom Clean Backdrop-Blurs tokens */
+  .backdrop-blur-sm { backdrop-filter: blur(4px); }
+  .backdrop-blur-md { backdrop-filter: blur(12px); }
+  .backdrop-blur-lg { backdrop-filter: blur(24px); }
+}

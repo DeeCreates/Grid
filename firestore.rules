@@ -1,0 +1,422 @@
+// firestore.rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==================== HELPER FUNCTIONS ====================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user has a specific role
+    function hasRole(role) {
+      return isAuthenticated() && request.auth.token.role == role;
+    }
+    
+    function isAdmin() {
+      return hasRole('admin');
+    }
+    
+    function isTechnician() {
+      return hasRole('technician');
+    }
+    
+    function isGuard() {
+      return hasRole('guard');
+    }
+    
+    function isCustomer() {
+      return hasRole('customer');
+    }
+    
+    function isPartner() {
+      return hasRole('partner');
+    }
+    
+    function isSales() {
+      return hasRole('sales');
+    }
+    
+    // Check if user owns a document by userId field
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Check if user owns a service
+    function isServiceOwner(serviceId) {
+      let service = get(/databases/$(database)/documents/services/$(serviceId));
+      return service != null && service.data.customerId == request.auth.uid;
+    }
+    
+    // Check if user is assigned to a booking
+    function isAssignedToBooking(bookingId) {
+      let booking = get(/databases/$(database)/documents/bookings/$(bookingId));
+      return booking != null && 
+             booking.data.assignedTo != null && 
+             booking.data.assignedTo is array && 
+             booking.data.assignedTo.hasAny([request.auth.uid]);
+    }
+    
+    // Check if user is assigned to an incident
+    function isAssignedToIncident(incidentId) {
+      let incident = get(/databases/$(database)/documents/incidents/$(incidentId));
+      return incident != null && 
+             incident.data.assignedTo != null && 
+             incident.data.assignedTo is array && 
+             incident.data.assignedTo.hasAny([request.auth.uid]);
+    }
+    
+    // Check if user has an active subscription
+    function hasActiveSubscription(uid) {
+      let sub = get(/databases/$(database)/documents/subscriptions/$(uid));
+      return sub != null && sub.data.status == 'active';
+    }
+    
+    // ==================== USERS COLLECTION ====================
+    match /users/{userId} {
+      allow read: if isAuthenticated() && 
+                   (isOwner(userId) || isAdmin() || isTechnician() || isGuard());
+      
+      allow create: if true; // Allow public registration
+      
+      allow update: if isAuthenticated() && 
+                     (isOwner(userId) || isAdmin()) &&
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                       'displayName', 'phoneNumber', 'photoURL', 
+                       'company', 'preferences', 'updatedAt', 'isAvailable',
+                       'currentJobId', 'lastActive', 'currentLocation',
+                       'notificationPreferences', 'badgeNumber', 'shift', 'rating'
+                     ]);
+      
+      allow delete: if isAuthenticated() && 
+                     (isOwner(userId) || isAdmin());
+    }
+    
+    // ==================== NOTIFICATIONS COLLECTION ====================
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && 
+                   (isOwner(resource.data.userId) || isAdmin());
+      
+      allow create: if isAuthenticated() && 
+                     isOwner(request.resource.data.userId);
+      
+      allow update: if isAuthenticated() && 
+                     (isOwner(resource.data.userId) || isAdmin()) &&
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                       'read', 'readAt'
+                     ]);
+      
+      allow delete: if isAuthenticated() && 
+                     (isOwner(resource.data.userId) || isAdmin());
+    }
+    
+    // ==================== SERVICES COLLECTION ====================
+    match /services/{serviceId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isTechnician() ||
+        isGuard() ||
+        isServiceOwner(serviceId) ||
+        isPartner()
+      );
+      
+      allow create: if isAuthenticated() && 
+                     (isAdmin() || isOwner(request.resource.data.customerId));
+      
+      allow update: if isAuthenticated() && 
+                     (isAdmin() || isServiceOwner(serviceId));
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== INCIDENTS COLLECTION ====================
+    match /incidents/{incidentId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isGuard() ||
+        isTechnician() ||
+        isServiceOwner(incidentId) ||
+        isAssignedToIncident(incidentId)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard() || 
+        isTechnician() ||
+        isServiceOwner(incidentId) ||
+        isOwner(request.resource.data.reportedBy)
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard() || 
+        isTechnician() ||
+        isServiceOwner(incidentId) ||
+        isAssignedToIncident(incidentId)
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== ALERTS COLLECTION ====================
+    match /alerts/{alertId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isGuard() ||
+        isTechnician() ||
+        isServiceOwner(alertId)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard() || 
+        isTechnician()
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard() || 
+        isTechnician()
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== BOOKINGS COLLECTION ====================
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isTechnician() ||
+        isAssignedToBooking(bookingId) ||
+        isServiceOwner(bookingId) ||
+        isOwner(resource.data.customerId)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() ||
+        isTechnician() ||
+        isOwner(request.resource.data.customerId)
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        isTechnician() ||
+        isAssignedToBooking(bookingId) ||
+        isServiceOwner(bookingId) ||
+        isOwner(resource.data.customerId)
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== EQUIPMENT COLLECTION ====================
+    match /equipment/{equipmentId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isTechnician() ||
+        isGuard()
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        isTechnician()
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        isTechnician()
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== INVOICES COLLECTION ====================
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isOwner(resource.data.customerId) ||
+        isSales()
+      );
+      
+      allow create: if isAuthenticated() && isAdmin();
+      
+      allow update: if isAuthenticated() && isAdmin();
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== LEADS COLLECTION ====================
+    match /leads/{leadId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isPartner() ||
+        isSales()
+      );
+      
+      allow create: if true; // Allow public lead creation
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        isPartner() ||
+        isSales()
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== SETTINGS COLLECTION ====================
+    match /settings/{settingId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isPartner() ||
+        isSales()
+      );
+      
+      allow write: if isAuthenticated() && isAdmin();
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== ROLES COLLECTION ====================
+    match /roles/{roleId} {
+      allow read: if isAuthenticated() && isAdmin();
+      allow write: if isAuthenticated() && isAdmin();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== API KEYS COLLECTION ====================
+    match /apiKeys/{keyId} {
+      allow read: if isAuthenticated() && isAdmin();
+      allow write: if isAuthenticated() && isAdmin();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== PAYMENT METHODS COLLECTION ====================
+    match /paymentMethods/{methodId} {
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      allow write: if isAuthenticated() && isOwner(resource.data.userId);
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && isOwner(request.resource.data.userId);
+    }
+    
+    // ==================== SUBSCRIPTIONS COLLECTION ====================
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isOwner(subscriptionId)
+      );
+      
+      allow write: if isAuthenticated() && isAdmin();
+      allow create: if isAuthenticated() && isAdmin();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== PATROLS COLLECTION ====================
+    match /patrols/{patrolId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isGuard() ||
+        isOwner(resource.data.guardId)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard()
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        isGuard() ||
+        isOwner(resource.data.guardId)
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== SUPPORT TICKETS COLLECTION ====================
+    match /supportTickets/{ticketId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isOwner(resource.data.customerId)
+      );
+      
+      allow create: if isAuthenticated() && isOwner(request.resource.data.customerId);
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        isOwner(resource.data.customerId)
+      );
+      
+      allow delete: if isAuthenticated() && isAdmin();
+      
+      // Support ticket messages
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && (
+          isAdmin() ||
+          isOwner(resource.data.senderId)
+        );
+        
+        allow create: if isAuthenticated() && (
+          isAdmin() ||
+          isOwner(request.resource.data.senderId)
+        );
+        
+        allow update: if false;
+        allow delete: if isAuthenticated() && isAdmin();
+      }
+    }
+    
+    // ==================== ANALYTICS COLLECTION ====================
+    match /analytics/{docId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        hasActiveSubscription(request.auth.uid)
+      );
+      
+      allow write: if isAuthenticated() && isAdmin();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== AUDIT LOGS COLLECTION ====================
+    match /auditLogs/{logId} {
+      allow read: if isAuthenticated() && isAdmin();
+      allow write: if isAuthenticated() && isAdmin();
+      allow create: if isAuthenticated() && isAdmin();
+      allow delete: if false;
+    }
+    
+    // ==================== REPORTS COLLECTION ====================
+    match /reports/{reportId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isPartner() ||
+        isSales() ||
+        isOwner(resource.data.generatedBy)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() ||
+        isPartner() ||
+        isSales()
+      );
+      
+      allow update: if isAuthenticated() && isAdmin();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // ==================== FCM TOKENS COLLECTION ====================
+    match /fcmTokens/{token} {
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      allow write: if isAuthenticated() && isOwner(resource.data.userId);
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && isOwner(request.resource.data.userId);
+    }
+    
+    // ==================== DEFAULT DENY ====================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

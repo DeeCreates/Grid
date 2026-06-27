@@ -1,0 +1,37 @@
+// storage.rules
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // User avatars
+    match /avatars/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Service evidence
+    match /services/{serviceId}/{docId}/{fileName} {
+      allow read: if request.auth != null && (
+        exists(/databases/(default)/documents/services/$(serviceId)) &&
+        get(/databases/(default)/documents/services/$(serviceId)).data.customerId == request.auth.uid ||
+        request.auth.token.role in ['admin', 'guard']
+      );
+      allow write: if request.auth != null && request.auth.token.role in ['admin', 'guard'];
+    }
+    
+    // Recordings
+    match /recordings/{serviceId}/{date}/{fileName} {
+      allow read: if request.auth != null && (
+        exists(/databases/(default)/documents/services/$(serviceId)) &&
+        get(/databases/(default)/documents/services/$(serviceId)).data.customerId == request.auth.uid ||
+        request.auth.token.role in ['admin', 'guard', 'technician']
+      );
+      allow write: if request.auth != null && request.auth.token.role in ['admin', 'technician'];
+    }
+    
+    // Public files
+    match /public/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
