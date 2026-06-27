@@ -179,17 +179,23 @@ export default defineConfig({
       },
     }),
   ],
+  // CHANGED: Use array syntax for better Rolldown compatibility
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@features': path.resolve(__dirname, './src/features'),
-      '@utils': path.resolve(__dirname, './src/lib'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@stores': path.resolve(__dirname, './src/stores'),
-      '@types': path.resolve(__dirname, './src/types'),
-      '@services': path.resolve(__dirname, './src/services'),
-    },
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, './src') },
+      { find: '@components', replacement: path.resolve(__dirname, './src/components') },
+      { find: '@features', replacement: path.resolve(__dirname, './src/features') },
+      { find: '@utils', replacement: path.resolve(__dirname, './src/lib') },
+      { find: '@hooks', replacement: path.resolve(__dirname, './src/hooks') },
+      { find: '@stores', replacement: path.resolve(__dirname, './src/stores') },
+      { find: '@types', replacement: path.resolve(__dirname, './src/types') },
+      { find: '@services', replacement: path.resolve(__dirname, './src/services') },
+      { find: '@app', replacement: path.resolve(__dirname, './src/app') },
+      { find: '@contexts', replacement: path.resolve(__dirname, './src/contexts') },
+      { find: '@lib', replacement: path.resolve(__dirname, './src/lib') },
+      { find: '@assets', replacement: path.resolve(__dirname, './src/assets') },
+      { find: '@styles', replacement: path.resolve(__dirname, './src/styles') },
+    ],
   },
   // FIX: Skip TypeScript type checking during build
   esbuild: {
@@ -265,6 +271,8 @@ export default defineConfig({
               id.includes('node_modules/date-fns')) {
             return 'form-vendor';
           }
+          // Everything else
+          return 'vendor';
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) {
