@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, BrowserRouter, useLocation } from 'react-router-dom';
-import { useAuthStore } from 'src/stores/authStore';
+import { useAuthStore } from './stores/authStore';
 import { MainLayout } from '@/app/layouts/MainLayout';
 import { DashboardLayout } from '@/app/layouts/DashboardLayout';
 import { AuthLayout } from '@/app/layouts/AuthLayout';
