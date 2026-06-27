@@ -10,7 +10,7 @@
     "build:tsc": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "vercel-build": "npm run build",
+    "vercel-build": "vite build",
     "postinstall": "echo '✅ Dependencies installed'"
   },
   "dependencies": {
