@@ -1,21 +1,26 @@
 {
   "compilerOptions": {
+    // ============================================
+    // LANGUAGE & ENVIRONMENT
+    // ============================================
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",
-    "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    
-    // Strictness
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+
+    // ============================================
+    // STRICTNESS (Enhanced for production)
+    // ============================================
     "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedLocals": true,        // ✅ Changed to true (catch unused vars)
+    "noUnusedParameters": true,    // ✅ Changed to true (catch unused params)
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitOverride": true,
@@ -24,9 +29,9 @@
     "allowUnreachableCode": false,
     "exactOptionalPropertyTypes": false,
     
-    // Module resolution
-    // FIX: Add ignoreDeprecations to handle baseUrl deprecation
-    "ignoreDeprecations": "6.0",
+    // ============================================
+    // MODULE RESOLUTION & PATHS
+    // ============================================
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
@@ -38,29 +43,59 @@
       "@types/*": ["./src/types/*"],
       "@services/*": ["./src/services/*"],
       "@assets/*": ["./src/assets/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@styles/*": ["./src/styles/*"],
+      "@config/*": ["./src/config/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@validations/*": ["./src/validations/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@helpers/*": ["./src/helpers/*"]
     },
-    
-    // Type checking
+
+    // ============================================
+    // INTEROPERABILITY
+    // ============================================
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    
-    // Decorators (if needed for future use)
+
+    // ============================================
+    // DECORATORS (Optional - for future use)
+    // ============================================
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    
-    // Advanced
-    "preserveSymlinks": true,
+
+    // ============================================
+    // OUTPUT & SOURCE MAPS
+    // ============================================
     "sourceMap": true,
     "removeComments": false,
     "preserveConstEnums": true,
-    
-    // DOM types
-    "types": ["vite/client", "node", "@types/react", "@types/react-dom"]
+    "declaration": false,
+    "declarationMap": false,
+
+    // ============================================
+    // ADVANCED
+    // ============================================
+    "preserveSymlinks": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+
+    // ============================================
+    // TYPE DEFINITIONS
+    // ============================================
+    "types": [
+      "vite/client",
+      "node",
+      "@types/react",
+      "@types/react-dom",
+      "@types/web-push"
+    ]
   },
+
+  // ============================================
+  // INCLUDE/EXCLUDE
+  // ============================================
   "include": [
-    "src",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.d.ts",
@@ -77,12 +112,25 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "**/__tests__/**",
+    "**/__mocks__/**"
   ],
+
+  // ============================================
+  // PROJECT REFERENCES
+  // ============================================
   "references": [{ "path": "./tsconfig.node.json" }],
+
+  // ============================================
+  // TS-NODE (for script execution)
+  // ============================================
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
-    }
+      "module": "CommonJS",
+      "esModuleInterop": true
+    },
+    "transpileOnly": true,
+    "files": true
   }
 }

@@ -1,55 +1,126 @@
-# Logs
-logs
+# ============================================
+# LOGS
+# ============================================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log
+.firebase-debug.log
 
-# Dependencies
-node_modules
-.pnpm-store
-.yarn/cache
+# ============================================
+# DEPENDENCIES
+# ============================================
+node_modules/
+.pnpm-store/
+.yarn/cache/
 .yarn/install-state.gz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# Build outputs
-dist
-dist-ssr
-build
-out
-.next
-.nuxt
-.output
+# ============================================
+# BUILD OUTPUTS
+# ============================================
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.output/
+storybook-static/
+.cache/
+public/
+.vercel/output/
 
-# Environment variables
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.*.local
+.env.production
+.env.staging
+.env.vercel
 
-# Local development files
-*.local
+# ============================================
+# VITE SPECIFIC
+# ============================================
+.vite/
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# ============================================
+# FIREBASE
+# ============================================
+.firebase/
+.firebaserc
+firebase.json
+google-credentials.json
+*.pem
+*.key
+*.crt
+firebase-debug.log
+.firebase-debug.log
+
+# Firebase Functions
+functions/node_modules/
+functions/dist/
+functions/lib/
+functions/*.log
+functions/.runtimeconfig.json
+
+# Firebase Hosting
+.firebase/hosting.*.cache
+firebase-debug.*.log
+
+# ============================================
+# SERVICE WORKER & PWA
+# ============================================
+sw.js
+sw-*.js
+workbox-*.js
+*.worker.js
+*.service-worker.js
+
+# ============================================
+# TYPESCRIPT
+# ============================================
 *.tsbuildinfo
+tsconfig.tsbuildinfo
+*.d.ts.map
+*.d.ts
+!*.d.ts
 
-# Editor directories and files
+# ============================================
+# EDITOR & IDE
+# ============================================
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/launch.json
+!.vscode/tasks.json
+
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+*.iml
+*.ipr
+*.iws
 *.sw?
 *.swp
 *~
 .zed/
+.editorconfig
 
-# OS files
+# ============================================
+# OS FILES
+# ============================================
 .DS_Store
 .DS_Store?
 ._*
@@ -58,188 +129,31 @@ out
 ehthumbs.db
 Thumbs.db
 Desktop.ini
-
-# Testing coverage
-coverage
-.nyc_output
-*.lcov
-
-# Firebase
-.firebase
-firebase-debug.log
-.firebase-debug.log
-google-credentials.json
-*.pem
-*.key
-*.crt
-
-# Firebase functions
-functions/node_modules
-functions/dist
-functions/lib
-
-# Firebase hosting
-.firebaserc
-firebase.json
-.firebase/
-
-# Service worker
-sw.js
-sw-*.js
-workbox-*.js
-
-# TypeScript
-*.tsbuildinfo
-tsconfig.tsbuildinfo
-
-# Temporary files
-tmp
-temp
+*.bak
 *.tmp
-*.temp
 
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
-*.dockerignore
-
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-
-# Analytics
-amplify/
-.aws-sam/
-
-# Debug files
-*.log
-*.pid
-*.seed
-*.pid.lock
-
-# Reports
-reports/
+# ============================================
+# TESTING
+# ============================================
+coverage/
+.nyc_output/
+*.lcov
+__mocks__/
+__tests__/__snapshots__/
 test-reports/
-*.html
-
-# Uploads
-uploads/
-media/
-assets/uploads/
-
-# Build tools
-*.tgz
-*.tar.gz
-*.zip
-*.rar
-
-# IDE specific
-.idea/
-.vscode/
-*.iml
-.classpath
-.project
-.settings/
-
-# Database
-*.sqlite
-*.db
-*.sql
-*.sqlite3
-
-# Sentry
-.sentry/
-sentry.properties
-
-# Storybook
-storybook-static
-*.stories.mdx
-*.stories.tsx
-
-# Next.js
-.next/
-out/
-.vercel
-
-# Nuxt
-.nuxt/
-.output/
-
-# Svelte
-.svelte-kit/
-
-# Remix
-build/
-.cache/
-
-# Gatsby
-.cache/
-public/
-
-# Expo
-.expo/
-dist/cache/
-
-# React Native
-*.hprof
-*.jks
-*.keystore
-*.p8
-*.p12
-
-# NativeScript
-platforms/
-hooks/
-*.d.ts.map
-
-# Cordova
-platforms/
-plugins/
-
-# Ionic
-www/
-.ionic/
-
-# Babel
-babel.config.json
-.babelrc
-.babelrc.json
-
-# ESLint
-.eslintcache
-.eslintrc.js
-.eslintrc.json
-
-# Prettier
-.prettierrc
-.prettierignore
-
-# Stylelint
-.stylelintrc
-.stylelintcache
-
-# Husky
-.husky/
-.huskyrc
-.huskyrc.json
-
-# Lint-staged
-.lintstagedrc
-.lintstagedrc.json
-
-# Commitlint
-.commitlintrc
-.commitlintrc.json
+reports/
 
 # Jest
 jest.config.js
 jest.config.ts
 jest.setup.js
 jest.setup.ts
-__mocks__/
-__tests__/__snapshots__/
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
 
 # Vitest
 vitest.config.ts
@@ -252,6 +166,8 @@ cypress/
 cypress.json
 cypress.config.js
 cypress.config.ts
+cypress/screenshots/
+cypress/videos/
 
 # Playwright
 playwright-report/
@@ -259,25 +175,179 @@ test-results/
 playwright.config.ts
 playwright.config.js
 
-# Mock Service Worker
-mocks/
-mockServiceWorker.js
+# ============================================
+# TEMPORARY FILES
+# ============================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+*.log
 
-# Generated files
+# ============================================
+# DOCKER
+# ============================================
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.dockerignore
+.docker/
+docker-compose.override.yml
+
+# ============================================
+# DEPLOYMENT & INFRASTRUCTURE
+# ============================================
+.vercel
+.vercel/
+.aws-sam/
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+*.pem
+*.key
+*.crt
+
+# ============================================
+# ANALYTICS & MONITORING
+# ============================================
+amplify/
+.sentry/
+sentry.properties
+sentry.*.config.js
+
+# ============================================
+# DATABASES
+# ============================================
+*.sqlite
+*.db
+*.sql
+*.sqlite3
+*.mdb
+*.accdb
+
+# ============================================
+# COMPRESSED FILES
+# ============================================
+*.tgz
+*.tar.gz
+*.zip
+*.rar
+*.7z
+*.gz
+*.bz2
+
+# ============================================
+# GENERATED FILES
+# ============================================
 generated/
 api-types/
 graphql-types/
+*.generated.ts
+*.generated.js
 
-# Internationalization
-src/i18n/locales/*.json
+# ============================================
+# UPLOADS & MEDIA
+# ============================================
+uploads/
+media/
+assets/uploads/
+public/uploads/
+public/media/
+
+# ============================================
+# ASSETS & STATIC FILES (that shouldn't be tracked)
+# ============================================
+public/assets/images/
+public/assets/videos/
+public/assets/audio/
+src/assets/images/
+src/assets/videos/
+src/assets/audio/
+
+# ============================================
+# EXCLUDED BUT KEEP SPECIFIC FILES
+# ============================================
 !src/i18n/locales/en.json
+!src/assets/images/.gitkeep
+!src/assets/fonts/.gitkeep
+!public/assets/images/.gitkeep
 
-# CDN assets
-public/assets/
-public/images/
+# ============================================
+# CODE QUALITY
+# ============================================
+.eslintcache
+.stylelintcache
+.prettiercache
 
-# Manual exclusions for specific directories you want to keep
-!src/i18n/locales/en.json
-!src/assets/images/
-!src/assets/fonts/
+# ============================================
+# GIT HOOKS
+# ============================================
+.husky/
+.huskyrc
+.huskyrc.json
+.huskyrc.js
+.lintstagedrc
+.lintstagedrc.json
+.commitlintrc
+.commitlintrc.json
+
+# ============================================
+# CONFIG FILES (keep these excluded)
+# ============================================
+babel.config.json
+.babelrc
+.babelrc.json
+.eslintrc.js
+.eslintrc.json
+.prettierrc
+.prettierignore
+.stylelintrc
+.stylelintrc.json
+postcss.config.js
+tailwind.config.js
+
+# ============================================
+# MISC
+# ============================================
+*.local
+*.tsbuildinfo
+*.tgz
+*.dll
+*.so
+*.dylib
+
+# ============================================
+# SPECIFIC TO GRID SECURITY
+# ============================================
+# Firebase Admin SDK keys (never commit!)
+service-account-key.json
+*.key.json
+*.private-key.json
+
+# SSL Certificates
+*.crt
+*.csr
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Video processing temporary files
+processed-videos/
+thumbnails/
+temp-uploads/
+
+# Reports
+audit-reports/
+security-reports/
+
+# ============================================
+# VERCEL SPECIFIC
+# ============================================
 .vercel
+.vercel/
+vercel.json (if it contains secrets)

@@ -168,18 +168,18 @@ export default defineConfig({
             },
           },
         ],
-        navigationPreload: true,
+        navigationPreload: false,
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
       },
+      // ⚠️ CRITICAL FIX: Disable PWA in development
       devOptions: {
-        enabled: process.env.NODE_ENV === 'development',
+        enabled: process.env.NODE_ENV === 'development' && false, // Disabled for dev
         type: 'module',
       },
     }),
   ],
-  // CHANGED: Use array syntax for better Rolldown compatibility
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, './src') },
@@ -197,7 +197,6 @@ export default defineConfig({
       { find: '@styles', replacement: path.resolve(__dirname, './src/styles') },
     ],
   },
-  // FIX: Skip TypeScript type checking during build
   esbuild: {
     tsconfigRaw: {
       compilerOptions: {
@@ -215,7 +214,8 @@ export default defineConfig({
     open: true,
     host: true,
     strictPort: false,
-    proxy: {
+    // ⚠️ Remove proxy for production - Vercel handles this differently
+    proxy: process.env.NODE_ENV === 'development' ? {
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
@@ -225,54 +225,36 @@ export default defineConfig({
         target: 'ws://localhost:5000',
         ws: true,
       },
-    },
+    } : undefined,
   },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: process.env.NODE_ENV === 'development',
     minify: 'terser',
-    // Force build even with TypeScript errors
+    // ⚠️ Add for Vercel
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // React vendor
-          if (id.includes('node_modules/react') || 
-              id.includes('node_modules/react-dom') || 
-              id.includes('node_modules/react-router-dom')) {
-            return 'react-vendor';
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('lucide-react') || id.includes('clsx') || id.includes('tailwind-merge') || id.includes('framer-motion')) {
+              return 'ui-vendor';
+            }
+            if (id.includes('@tanstack') || id.includes('zustand')) {
+              return 'data-vendor';
+            }
+            if (id.includes('firebase')) {
+              return 'firebase-vendor';
+            }
+            if (id.includes('recharts') || id.includes('chart.js') || id.includes('d3-')) {
+              return 'chart-vendor';
+            }
+            return 'vendor';
           }
-          // UI vendor
-          if (id.includes('node_modules/lucide-react') || 
-              id.includes('node_modules/clsx') || 
-              id.includes('node_modules/tailwind-merge') ||
-              id.includes('node_modules/framer-motion')) {
-            return 'ui-vendor';
-          }
-          // Data vendor
-          if (id.includes('node_modules/@tanstack/react-query') || 
-              id.includes('node_modules/zustand')) {
-            return 'data-vendor';
-          }
-          // Firebase vendor
-          if (id.includes('node_modules/firebase')) {
-            return 'firebase-vendor';
-          }
-          // Chart vendor
-          if (id.includes('node_modules/recharts') || 
-              id.includes('node_modules/chart.js') ||
-              id.includes('node_modules/d3-')) {
-            return 'chart-vendor';
-          }
-          // Form vendor
-          if (id.includes('node_modules/react-hook-form') || 
-              id.includes('node_modules/@hookform/resolvers') || 
-              id.includes('node_modules/zod') ||
-              id.includes('node_modules/date-fns')) {
-            return 'form-vendor';
-          }
-          // Everything else
-          return 'vendor';
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) {
@@ -301,7 +283,6 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCase',
     },
-    // Ensure PostCSS is used
     postcss: './postcss.config.js',
   },
   optimizeDeps: {
