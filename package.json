@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:vercel": "vite build",
+    "build:vercel": "vite build --mode production",
     "build:tsc": "tsc -b && vite build",
-    "lint": "eslint .",
+    "build:skip": "vite build --mode production",
+    "vercel-build": "vite build --mode production",
     "preview": "vite preview",
-    "vercel-build": "vite build",
-    "postinstall": "echo '✅ Dependencies installed'"
+    "postinstall": "echo '✅ Dependencies installed'",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.0",

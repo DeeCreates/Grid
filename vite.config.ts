@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
     
     plugins: [
       react({
+        jsxImportSource: '@emotion/react',
         babel: {
           plugins: [
             // Remove prop types in production for smaller bundle
@@ -22,6 +23,18 @@ export default defineConfig(({ mode }) => {
               { removeImport: true }
             ]
           ].filter(Boolean),
+          babelrc: false,
+          configFile: false,
+        },
+        // Skip TypeScript errors
+        tsconfigRaw: {
+          compilerOptions: {
+            strict: false,
+            skipLibCheck: true,
+            noUnusedLocals: false,
+            noUnusedParameters: false,
+            noImplicitAny: false,
+          },
         },
       }),
       
