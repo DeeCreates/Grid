@@ -17,7 +17,7 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
         name: 'GRID Security Platform',
-        short_name: 'GRID',
+        short_name: 'GRID SEC',
         description: 'Security-as-a-Service Platform for Ghana',
         theme_color: '#1a1a2e',
         background_color: '#ffffff',
