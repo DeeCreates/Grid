@@ -14,7 +14,6 @@ export default defineConfig(({ mode }) => {
     
     plugins: [
       react({
-        jsxImportSource: '@emotion/react',
         babel: {
           plugins: [
             // Remove prop types in production for smaller bundle
@@ -23,18 +22,6 @@ export default defineConfig(({ mode }) => {
               { removeImport: true }
             ]
           ].filter(Boolean),
-          babelrc: false,
-          configFile: false,
-        },
-        // Skip TypeScript errors
-        tsconfigRaw: {
-          compilerOptions: {
-            strict: false,
-            skipLibCheck: true,
-            noUnusedLocals: false,
-            noUnusedParameters: false,
-            noImplicitAny: false,
-          },
         },
       }),
       
@@ -231,19 +218,19 @@ export default defineConfig(({ mode }) => {
     
     resolve: {
       alias: [
-        { find: '@', replacement: path.resolve(__dirname, './src') },
-        { find: '@components', replacement: path.resolve(__dirname, './src/components') },
-        { find: '@features', replacement: path.resolve(__dirname, './src/features') },
-        { find: '@utils', replacement: path.resolve(__dirname, './src/lib') },
-        { find: '@hooks', replacement: path.resolve(__dirname, './src/hooks') },
-        { find: '@stores', replacement: path.resolve(__dirname, './src/stores') },
-        { find: '@types', replacement: path.resolve(__dirname, './src/types') },
-        { find: '@services', replacement: path.resolve(__dirname, './src/services') },
-        { find: '@app', replacement: path.resolve(__dirname, './src/app') },
-        { find: '@contexts', replacement: path.resolve(__dirname, './src/contexts') },
-        { find: '@lib', replacement: path.resolve(__dirname, './src/lib') },
-        { find: '@assets', replacement: path.resolve(__dirname, './src/assets') },
-        { find: '@styles', replacement: path.resolve(__dirname, './src/styles') },
+        { find: '@', replacement: path.resolve(__dirname, 'src') },
+        { find: '@components', replacement: path.resolve(__dirname, 'src/components') },
+        { find: '@features', replacement: path.resolve(__dirname, 'src/features') },
+        { find: '@utils', replacement: path.resolve(__dirname, 'src/lib') },
+        { find: '@hooks', replacement: path.resolve(__dirname, 'src/hooks') },
+        { find: '@stores', replacement: path.resolve(__dirname, 'src/stores') },
+        { find: '@types', replacement: path.resolve(__dirname, 'src/types') },
+        { find: '@services', replacement: path.resolve(__dirname, 'src/services') },
+        { find: '@app', replacement: path.resolve(__dirname, 'src/app') },
+        { find: '@contexts', replacement: path.resolve(__dirname, 'src/contexts') },
+        { find: '@lib', replacement: path.resolve(__dirname, 'src/lib') },
+        { find: '@assets', replacement: path.resolve(__dirname, 'src/assets') },
+        { find: '@styles', replacement: path.resolve(__dirname, 'src/styles') },
       ],
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
     },
@@ -251,10 +238,8 @@ export default defineConfig(({ mode }) => {
     esbuild: {
       tsconfigRaw: {
         compilerOptions: {
-          noEmit: true,
-          skipLibCheck: true,
-          isolatedModules: true,
           strict: false,
+          skipLibCheck: true,
           noUnusedLocals: false,
           noUnusedParameters: false,
         },
@@ -401,14 +386,11 @@ export default defineConfig(({ mode }) => {
         'react',
         'react-dom',
         'react-router-dom',
-        'lucide-react',
-        '@tanstack/react-query',
         'zustand',
+        '@tanstack/react-query',
+        'lucide-react',
         'clsx',
         'tailwind-merge',
-        'framer-motion',
-        'react-hook-form',
-        '@hookform/resolvers',
       ],
       exclude: [],
       esbuildOptions: {
